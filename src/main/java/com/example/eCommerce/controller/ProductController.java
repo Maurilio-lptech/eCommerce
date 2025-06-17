@@ -44,7 +44,7 @@ public class ProductController {
         return ResponseEntity.ok(service.getProductById(id));
     }
 
-    @GetMapping("/search")
+    @GetMapping("/searchName")
     public Page<ProductDto> findProductByName(@RequestParam String name, Pageable pageable) {
         return service.getAllProductByName(name, pageable);
     }
@@ -55,7 +55,7 @@ public class ProductController {
     }
 
 
-    @GetMapping("/search2")
+    @GetMapping("/search")
     public Page<ProductDto> searchProduct(
             @RequestParam(required = false) String category,
             @RequestParam(required = false) String name,
