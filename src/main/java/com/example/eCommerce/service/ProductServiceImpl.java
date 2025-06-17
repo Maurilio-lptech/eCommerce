@@ -94,5 +94,8 @@ public class ProductServiceImpl implements ProductService {
         return productPage.map(mapper::toDto);
     }
 
+    public Page<ProductDto> searchProduct(String name, String category, Double price, Pageable pageable ){
+        return repository.search(name,category,price,pageable).map(mapper::toDto);
+    }
 
 }

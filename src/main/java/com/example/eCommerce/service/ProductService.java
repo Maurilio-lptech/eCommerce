@@ -21,4 +21,5 @@ public interface ProductService {
 
     public Page<ProductDto> getAllProductByName(String name, Pageable pageable);
 
+    public Page<ProductDto> searchProduct(String name, String category, Double price, Pageable pageable );
 }

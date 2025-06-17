@@ -21,54 +21,49 @@ public class ProductController {
 
     //CRUD
     @PostMapping("/new")
-    public ResponseEntity<ProductDto> createProduct(@RequestBody ProductDto EntityToCreate){
-        if(EntityToCreate.getId()!=null){
+    public ResponseEntity<ProductDto> createProduct(@RequestBody ProductDto EntityToCreate) {
+        if (EntityToCreate.getId() != null) {
             EntityToCreate.setId(null);
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(service.createProduct(EntityToCreate));
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<ProductDto> updateProduct(@PathVariable UUID id , @RequestBody ProductDto ProductToUpdate){
-        return ResponseEntity.ok(service.updateProduct(id,ProductToUpdate));
+    public ResponseEntity<ProductDto> updateProduct(@PathVariable UUID id, @RequestBody ProductDto ProductToUpdate) {
+        return ResponseEntity.ok(service.updateProduct(id, ProductToUpdate));
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable  UUID id){
+    public ResponseEntity<Void> deleteProduct(@PathVariable UUID id) {
         service.deleteProduct(id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductDto> findProductById(@PathVariable UUID id){
+    public ResponseEntity<ProductDto> findProductById(@PathVariable UUID id) {
         return ResponseEntity.ok(service.getProductById(id));
     }
 
     @GetMapping("/search")
-    public Page<ProductDto> findProductByName(@RequestParam String name, Pageable pageable){
+    public Page<ProductDto> findProductByName(@RequestParam String name, Pageable pageable) {
         return service.getAllProductByName(name, pageable);
     }
 
     @GetMapping("/Products")
-    public Page<ProductDto> findAllProducts(Pageable pageable){
+    public Page<ProductDto> findAllProducts(Pageable pageable) {
         return service.getAllProducts(pageable);
     }
 
 
-//    @GetMapping("/search2")
-//    public Page<ProductDto> searchProduct(
-//            @RequestParam(required = false) String category,
-//            @RequestParam(required = false) String name,
-//            @RequestParam(required = false) String price,
-//            Pageable pageableb
-//    ){
-//        return service.serchProduct();
-//    }
-
-
-
-
-
+    @GetMapping("/search2")
+    public Page<ProductDto> searchProduct(
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) Double price,
+            Pageable pageable
+    ) {
+        return service.searchProduct(name,category,price,pageable);
+    }
 
 
 }
