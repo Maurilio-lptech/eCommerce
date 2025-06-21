@@ -8,6 +8,7 @@ import com.example.eCommerce.repository.CategoryRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -29,10 +30,16 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Transactional
-    public CategoryDto createCategory(CategoryDto categoryDto) {
+    public CategoryDto createCategory(@NotNull CategoryDto categoryDto) {
         if(categoryDto.getId()!=null){
             throw  new IllegalArgumentException("Passa un id nullo durante la creazione");
         }
+
+        //check categoria name è presente o no
+        if(repository.existsByName(categoryDto.getName())){
+            throw new IllegalArgumentException("Nome categoria già presente nel db");
+        };
+
         return mapper.toDto(repository.save(mapper.toEntity(categoryDto)));
     }
 
@@ -46,11 +53,15 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Transactional
-    public CategoryDto updateCategory(UUID id, CategoryDto categoryDto) {
+    public CategoryDto updateCategory(UUID id, @NotNull CategoryDto categoryDto) {
 
         Category existingCategory= repository.findById(id)
                 .orElseThrow(()-> new EntityNotFoundException ("category con id"+ categoryDto.getId()+ " non trovato nel db"));
 
+        //check categoria name è presente o no
+        if(repository.existsByName(categoryDto.getName())){
+            throw new IllegalArgumentException("Nome categoria già presente nel db");
+        }
 
         existingCategory.setName(categoryDto.getName());
         existingCategory.setDescription(categoryDto.getDescription());

@@ -2,6 +2,7 @@ package com.example.eCommerce.dto;
 
 import jakarta.validation.constraints.*;
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 
 import java.util.UUID;
@@ -23,6 +24,7 @@ public class ProductDto {
     private double price;
 
     @NotNull
+    @Positive(message = "la quantita disponibile deve essere positiva")
     @Min(value = 0, message = "la quantita disponibile non può essere minore di 0")
     private int quantity_available;
 
@@ -34,13 +36,6 @@ public class ProductDto {
     private UUID category_id;
     private String categoryName;
 
-
-
-
-
-
-
-
-
+    private String imageName;
 
 }

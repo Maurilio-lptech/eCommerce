@@ -46,6 +46,8 @@ public class User {
     @OneToMany(mappedBy = "seller")
     private List<Product> product;
 
+    @OneToMany(mappedBy = "customer")
+    private List<Order> orders;
 
 
 }

@@ -1,0 +1,120 @@
+package com.example.eCommerce.service;
+
+import com.example.eCommerce.dto.OrderDetailsDto;
+import com.example.eCommerce.dto.OrderDto;
+import com.example.eCommerce.entity.Order;
+import com.example.eCommerce.entity.OrderDetails;
+import com.example.eCommerce.entity.Product;
+import com.example.eCommerce.entity.User;
+import com.example.eCommerce.enums.OrderState;
+import com.example.eCommerce.mapper.OrderDetailsMapper;
+import com.example.eCommerce.mapper.OrderMapper;
+import com.example.eCommerce.repository.OrderRepository;
+import com.example.eCommerce.repository.ProductRepository;
+import com.example.eCommerce.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+@Service
+@RequiredArgsConstructor
+public class OrderServiceImpl implements OrderService {
+
+    private final OrderRepository repository;
+    private final UserRepository userRepository;
+    private final ProductRepository productRepository;
+    private final OrderMapper mapper;
+    private final OrderDetailsMapper orderDetailsMapper;
+
+
+    public OrderDto getOrderById(UUID id) {
+        return mapper.toDto(repository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Nessun utente trovato con id" + id)));
+    }
+
+    @Transactional
+    public OrderDto createOrder(@NotNull OrderDto orderDto) {
+        // Validazione iniziale
+        if (orderDto.getId() != null) {
+            throw new IllegalArgumentException("L'ID deve essere null per una nuova creazione");
+        }
+
+        if (orderDto.getOrderDetailsList() == null || orderDto.getOrderDetailsList().isEmpty()) {
+            throw new IllegalArgumentException("L'ordine deve contenere almeno un prodotto");
+        }
+
+        // Verifica che il cliente esista
+        User customer = userRepository.findById(orderDto.getCustomer_id())
+                .orElseThrow(() -> new EntityNotFoundException("Cliente con ID " + orderDto.getCustomer_id() + " non trovato"));
+
+        // Converti DTO in entità
+        Order order = mapper.toEntity(orderDto);
+        order.setCustomer(customer);
+
+        // Imposta lo stato iniziale (se non specificato)
+        if (order.getState() == null) {
+            order.setState(OrderState.NEL_CARELLO);
+        }
+
+
+        //TODO: ogni prodotto che ordina devo creare l'orderd details singolarmente
+        //prendo dalla lista
+        //imposto id cliente
+        //imposto id ordine
+
+        //creo una lista per le entita da aggiungere
+        List<OrderDetails> orderDetailsEntities = new ArrayList<>();
+
+        for (OrderDetailsDto detailsDto : orderDto.getOrderDetailsList()) {
+            OrderDetails orderDetails = orderDetailsMapper.toEntity(detailsDto);
+
+            //verifico che esista il prodotto
+            Product product= productRepository.findById(detailsDto.getProduct_id())
+                    .orElseThrow(()->new EntityNotFoundException("Id prodotto"+detailsDto.getProduct_id()+" non trovato"));
+
+
+            orderDetails.setOrder(order);
+            orderDetails.setProduct(product);
+            orderDetails.setPriceForUnit(product.getPrice()); // recupero il prezzo per ogni prodotto
+            orderDetailsEntities.add(orderDetails);
+
+        }
+
+            // imposto la lista di orderDetails
+            order.setOrderDetailsList(orderDetailsEntities);
+
+            // Salva l'ordine (cascade salverà anche gli OrderDetails)
+            Order savedOrder = repository.save(order);
+
+            // Converti l'entità salvata in DTO per la risposta
+            return mapper.toDto(savedOrder);
+        }
+
+    //TODO: update order non so se si deve fare
+
+    @Transactional
+    public void deleteOrder(UUID id) {
+        if (!repository.existsById(id)) {
+            throw new EntityNotFoundException("Id non trovato nel DB");
+        }
+
+        repository.deleteById(id);
+    }
+
+
+    public Page<OrderDto> getAllOrders(Pageable pageable) {
+        Page<Order> orderPage = repository.findAll(pageable);
+
+        return orderPage.map(mapper::toDto);
+    }
+
+
+}

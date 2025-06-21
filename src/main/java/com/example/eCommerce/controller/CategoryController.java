@@ -3,6 +3,7 @@ package com.example.eCommerce.controller;
 import com.example.eCommerce.dto.CategoryDto;
 import com.example.eCommerce.service.CategoryService;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -21,7 +22,7 @@ public class CategoryController {
 
     //CRUD
     @PostMapping("/new")
-    public ResponseEntity<CategoryDto> createCategory(@RequestBody CategoryDto EntityToCreate){
+    public ResponseEntity<CategoryDto> createCategory(@RequestBody @NotNull CategoryDto EntityToCreate){
         if(EntityToCreate.getId()!=null){
             EntityToCreate.setId(null);
         }
@@ -29,7 +30,7 @@ public class CategoryController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<CategoryDto> updateCategory(@PathVariable UUID id ,@RequestBody CategoryDto CategoryToUpdate){
+    public ResponseEntity<CategoryDto> updateCategory(@PathVariable UUID id ,@RequestBody @NotNull CategoryDto CategoryToUpdate){
         return ResponseEntity.ok(service.updateCategory(id,CategoryToUpdate));
     }
 
