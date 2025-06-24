@@ -19,7 +19,6 @@ import java.util.UUID;
 
 @Entity
 @Data
-@ToString
 public class User {
 
 

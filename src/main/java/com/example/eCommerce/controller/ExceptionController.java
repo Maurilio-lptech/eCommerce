@@ -42,7 +42,7 @@ public class ExceptionController {
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResponseDTO> handleIllegalArgument(IllegalArgumentException e) {
-        ErrorResponseDTO error = new ErrorResponseDTO("", e.getMessage());
+        ErrorResponseDTO error = new ErrorResponseDTO("IllegalArgument", e.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 

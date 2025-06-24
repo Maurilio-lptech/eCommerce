@@ -54,7 +54,7 @@ public class Order implements Serializable {
     @PreUpdate
     private void validateOrder() {
         if (orderDetailsList == null || orderDetailsList.isEmpty()) {
-            throw new IllegalStateException("L'ordine deve contenere almeno un prodotto");
+           this.total=0.0;
         }
 
         // Calcola il totale
