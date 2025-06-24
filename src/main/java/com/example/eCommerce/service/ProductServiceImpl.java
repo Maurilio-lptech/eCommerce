@@ -63,7 +63,7 @@ public class ProductServiceImpl implements ProductService {
 
         Category category = categoryRepository.findById(productDto.getCategory_id())
                 .orElseThrow(() -> new EntityNotFoundException("Category con id" + productDto.getCategory_id() + "non trovata"));
-        //TODO: aggiungere il check ruolo venditore ( si potrebbe usare delle funzioni del service anzichè usare il repository?)
+        //TODO: aggiungere il check ruolo utente venditore ( si potrebbe usare delle funzioni del service anzichè usare il repository?)
         User seller = userRepository.findById(productDto.getSeller_id())
                 .orElseThrow(() -> new EntityNotFoundException("Venditore con id" + productDto.getSeller_id() + "non trovato"));
 
@@ -80,15 +80,27 @@ public class ProductServiceImpl implements ProductService {
         return mapper.toDto(repository.save(newProduct));
     }
 
-    //funzione per ottenere il path e salvare l'immagine
+    // Funzione per salvare un'immagine sul filesystem e restituire il nome del file
     private String saveImage(MultipartFile file) throws IOException {
+        // Genera un nome file univoco concatenando: UUId e estensione del immagine
         String fileName = "prod-" + UUID.randomUUID() + "." + StringUtils.getFilenameExtension(file.getOriginalFilename());
+
+        // Crea un oggetto Path combinando:
+        // - La directory di upload (uploadDir, definita in application proprieties)
+        // - Il nome file generato
         Path path = Paths.get(uploadDir + fileName);
 
+        // Crea tutte le directory necessarie (se non esistono già)
+        // per il percorso specificato
         Files.createDirectories(path.getParent());
+
+        // Copia il contenuto del file multipart (l'immagine uploadata)
+        // nel path specificato, sovrascrivendo se esiste già
         Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
 
-        return fileName; // Restituisce solo il nome file (percorso relativo)
+        // Restituisce solo il nome del file (percorso relativo)
+        // che può essere poi usato per riferimento nel database
+        return fileName;
     }
 
     @Transactional

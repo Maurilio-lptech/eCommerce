@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -77,8 +78,8 @@ public class OrderServiceImpl implements OrderService {
             OrderDetails orderDetails = orderDetailsMapper.toEntity(detailsDto);
 
             //verifico che esista il prodotto
-            Product product= productRepository.findById(detailsDto.getProduct_id())
-                    .orElseThrow(()->new EntityNotFoundException("Id prodotto"+detailsDto.getProduct_id()+" non trovato"));
+            Product product = productRepository.findById(detailsDto.getProduct_id())
+                    .orElseThrow(() -> new EntityNotFoundException("Id prodotto" + detailsDto.getProduct_id() + " non trovato"));
 
 
             orderDetails.setOrder(order);
@@ -88,17 +89,90 @@ public class OrderServiceImpl implements OrderService {
 
         }
 
-            // imposto la lista di orderDetails
-            order.setOrderDetailsList(orderDetailsEntities);
+        // imposto la lista di orderDetails
+        order.setOrderDetailsList(orderDetailsEntities);
 
-            // Salva l'ordine (cascade salverà anche gli OrderDetails)
-            Order savedOrder = repository.save(order);
+        // Salva l'ordine (cascade salverà anche gli OrderDetails)
+        Order savedOrder = repository.save(order);
 
-            // Converti l'entità salvata in DTO per la risposta
-            return mapper.toDto(savedOrder);
+        return mapper.toDto(savedOrder);
+    }
+
+    //TODO: update da testare
+    public OrderDto updateOrder(@NotNull OrderDto orderDto) {
+
+        Order existOrder = repository.findById(orderDto.getId())
+                .orElseThrow(() -> new EntityNotFoundException("Ordine con ID " + orderDto.getId() + " non trovato"));
+
+        if (orderDto.getOrderDetailsList() == null || orderDto.getOrderDetailsList().isEmpty()) {
+            throw new IllegalArgumentException("L'ordine deve contenere almeno un prodotto");
         }
 
-    //TODO: update order non so se si deve fare
+        // Verifica che il cliente esista
+        User customer = userRepository.findById(orderDto.getCustomer_id())
+                .orElseThrow(() -> new EntityNotFoundException("Cliente con ID " + orderDto.getCustomer_id() + " non trovato"));
+
+        // Converti DTO in entità
+        Order order = mapper.toEntity(orderDto);
+        order.setCustomer(customer);
+
+        // Imposta lo stato ordine
+        switch (orderDto.getState().trim().toUpperCase()) {
+            case "NEL_CARRELLO":
+                order.setState(OrderState.NEL_CARELLO);
+                break;
+
+            case "IN_ELABORAZIONE":
+                order.setState(OrderState.IN_ELABORAZIONE);
+                break;
+
+            case "SPEDITO":
+                order.setState(OrderState.SPEDITO);
+                break;
+
+            case "CONSEGNATO":
+                order.setState(OrderState.CONSEGNATO);
+                break;
+
+            case "ANNULATO":
+                order.setState(OrderState.ANNULATO);
+                break;
+            default:
+                throw new IllegalArgumentException("Stato ordine " + order.getState() + " non valido");
+
+        }
+
+        // ogni prodotto che ordina devo creare l'orderdetails singolarmente
+        //prendo dalla lista
+        //imposto id cliente
+        //imposto id ordine
+
+        //creo una lista per le entita da aggiungere
+        List<OrderDetails> orderDetailsEntities = new ArrayList<>();
+
+        for (OrderDetailsDto detailsDto : orderDto.getOrderDetailsList()) {
+            OrderDetails orderDetails = orderDetailsMapper.toEntity(detailsDto);
+
+            //verifico che esista il prodotto
+            Product product = productRepository.findById(detailsDto.getProduct_id())
+                    .orElseThrow(() -> new EntityNotFoundException("Id prodotto" + detailsDto.getProduct_id() + " non trovato"));
+
+
+            orderDetails.setOrder(order);
+            orderDetails.setProduct(product);
+            orderDetails.setPriceForUnit(product.getPrice()); // recupero il prezzo per ogni prodotto
+            orderDetailsEntities.add(orderDetails);
+
+        }
+
+        // imposto la lista di orderDetails
+        order.setOrderDetailsList(orderDetailsEntities);
+
+        // Salva l'ordine (cascade salverà anche gli OrderDetails)
+        Order savedOrder = repository.save(order);
+
+        return mapper.toDto(savedOrder);
+    }
 
     @Transactional
     public void deleteOrder(UUID id) {
@@ -114,6 +188,23 @@ public class OrderServiceImpl implements OrderService {
         Page<Order> orderPage = repository.findAll(pageable);
 
         return orderPage.map(mapper::toDto);
+    }
+
+    //Todo: get all order by state
+
+    public List<OrderDto> getAllOrdersByState(String state) {
+
+        if (!state.trim().equalsIgnoreCase("NEL_CARELLO") &&
+                !state.trim().equalsIgnoreCase("IN_ELABORAZIONE") &&
+                !state.trim().equalsIgnoreCase("SPEDITO") &&
+                !state.trim().equalsIgnoreCase("CONSEGNATO") &&
+                !state.trim().equalsIgnoreCase("ANNULATO")) {
+            throw new IllegalArgumentException("Inserire uno stato valido");
+        }
+
+        return repository.findAllByState(state).stream()
+                .map(mapper::toDto)
+                .collect(Collectors.toList());
     }
 
 

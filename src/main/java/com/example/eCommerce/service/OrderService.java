@@ -4,6 +4,7 @@ import com.example.eCommerce.dto.OrderDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface OrderService {
@@ -20,6 +21,8 @@ public interface OrderService {
     public Page<OrderDto> getAllOrders(Pageable pageable);
 
     public OrderDto getOrderById(UUID id);
+
+    public List<OrderDto> getAllOrdersByState(String state);
 
 
 

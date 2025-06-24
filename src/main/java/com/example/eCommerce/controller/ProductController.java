@@ -38,6 +38,8 @@ public class ProductController {
 
     @PostConstruct
     public void init() {
+        Path fullPath = Paths.get(uploadDir).toAbsolutePath();
+        System.out.println("🛠️ Cartella upload: " + fullPath);
         try {
             Files.createDirectories(Paths.get(uploadDir));
         } catch (IOException e) {
@@ -56,21 +58,32 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.createProduct(EntityToCreate, image));
     }
 
-    @GetMapping("/images/{filename:.+}")
-    public ResponseEntity<Resource> getImage(@PathVariable String filename){
-       try {
-           Path path = Paths.get(uploadDir + filename);
-           Resource resource = new UrlResource(path.toUri());
+    // Endpoint GET per recuperare un'immagine dal server
+    @GetMapping("/images/{filename:.+}")  // (il ".+" serve per catturare l'estensione)
+    public ResponseEntity<Resource> getImage(@PathVariable String filename) {
+        try {
+            // Costruisce il percorso completo del file unendo:
+            // - la directory base (uploadDir)
+            // - il nome del file passato nell'URL
+            Path path = Paths.get(uploadDir + filename);
+            System.out.println("Percorso cercato: " + Paths.get(uploadDir).resolve(filename).toAbsolutePath());
 
-           return ResponseEntity.ok()
-                   .header(HttpHeaders.CONTENT_TYPE, Files.probeContentType(path))
-                   .body(resource);
+            // Carica la risorsa (immagine) come Resource (interfaccia Spring per risorse)
+            Resource resource = new UrlResource(path.toUri());
 
-       }catch (MalformedURLException e1){
-           return ResponseEntity.badRequest().body(null);
+            // Se tutto va bene, restituisce:
+            // - Status HTTP 200 (OK)
+            // - Header Content-Type appropriato (es. image/jpeg)
+            // - Il contenuto dell'immagine come corpo della risposta
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_TYPE, Files.probeContentType(path))
+                    .body(resource);
+
+        } catch (MalformedURLException e1) {
+            return ResponseEntity.badRequest().body(null);
         } catch (IOException e) {
-           return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-       }
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @PutMapping("/update/{id}")
