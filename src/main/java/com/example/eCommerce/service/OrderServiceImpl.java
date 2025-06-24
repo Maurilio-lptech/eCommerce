@@ -43,6 +43,15 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional
     public OrderDto createOrder(@NotNull OrderDto orderDto) {
+        //Todo: check se esiste gia un carello con id_utente e status nel carello al interno del db, in tal caso non creare un carrello
+        if(orderDto.getState().equals("NEL_CARRELLO")) {
+            List<Order> existingCart = repository.findAllByStateAndCustomerId(OrderState.NEL_CARRELLO, orderDto.getCustomer_id());
+            if (!existingCart.isEmpty()) {
+                throw new IllegalArgumentException("Esiste già un carrello per questo utente");
+            }
+        }
+
+
         // Validazione iniziale
         if (orderDto.getId() != null) {
             throw new IllegalArgumentException("L'ID deve essere null per una nuova creazione");
@@ -63,6 +72,32 @@ public class OrderServiceImpl implements OrderService {
         // Imposta lo stato iniziale (se non specificato)
         if (order.getState() == null) {
             order.setState(OrderState.NEL_CARRELLO);
+        }
+        else{
+            switch (orderDto.getState().trim().toUpperCase()) {
+                case "NEL_CARRELLO":
+                    order.setState(OrderState.NEL_CARRELLO);
+                    break;
+
+                case "IN_ELABORAZIONE":
+                    order.setState(OrderState.IN_ELABORAZIONE);
+                    break;
+
+                case "SPEDITO":
+                    order.setState(OrderState.SPEDITO);
+                    break;
+
+                case "CONSEGNATO":
+                    order.setState(OrderState.CONSEGNATO);
+                    break;
+
+                case "ANNULATO":
+                    order.setState(OrderState.ANNULATO);
+                    break;
+                default:
+                    throw new IllegalArgumentException("Stato ordine " + order.getState() + " non valido");
+
+            }
         }
 
 
@@ -99,6 +134,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     //TODO: update da testare
+    @Transactional
     public OrderDto updateOrder(@NotNull OrderDto orderDto) {
 
         Order existOrder = repository.findById(orderDto.getId())

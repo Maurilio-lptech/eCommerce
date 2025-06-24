@@ -3,6 +3,7 @@ package com.example.eCommerce.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
+import lombok.ToString;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.UuidGenerator;
 
@@ -11,6 +12,7 @@ import java.util.UUID;
 
 @Data
 @Entity
+@ToString
 public class Product {
 
     @Id

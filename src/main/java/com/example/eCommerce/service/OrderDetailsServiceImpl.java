@@ -97,7 +97,7 @@ public class OrderDetailsServiceImpl implements  OrderDetailsService{
     //CART
     public List<OrderDetailsDto> getAllCartOrderDetails(){
 
-        return repository.findAllByOrderState(OrderState.NEL_CARELLO)
+        return repository.findAllByOrderState(OrderState.NEL_CARRELLO)
                 .stream()
                 .map(mapper::toDto)
                 .collect(Collectors.toList());

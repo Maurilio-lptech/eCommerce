@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
+import lombok.ToString;
 import org.hibernate.annotations.UuidGenerator;
 
 import jakarta.persistence.Id;
@@ -18,6 +19,7 @@ import java.util.UUID;
 
 @Entity
 @Data
+@ToString
 public class User {
 
 
@@ -42,10 +44,10 @@ public class User {
     //Todo: implementare con spring security role
 
     // join con le altre tabelle
-
+    @ToString.Exclude
     @OneToMany(mappedBy = "seller")
     private List<Product> product;
-
+    @ToString.Exclude
     @OneToMany(mappedBy = "customer")
     private List<Order> orders;
 
