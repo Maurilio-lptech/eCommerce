@@ -16,7 +16,7 @@ import java.util.UUID;
 
 @Entity
 @Data
-@ToString
+
 @Table(name = "customer_order")
 public class Order implements Serializable {
 
@@ -45,7 +45,7 @@ public class Order implements Serializable {
     @Positive(message = "Il totale deve essere positivo")
     private Double total;
 
-    @ToString.Exclude
+
     @OneToMany(mappedBy = "order", cascade=CascadeType.ALL, orphanRemoval = true)
     private List<OrderDetails> orderDetailsList;
 

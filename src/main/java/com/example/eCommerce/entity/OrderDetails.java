@@ -11,7 +11,6 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "order_details")
-@ToString
 @Data
 public class OrderDetails {
 

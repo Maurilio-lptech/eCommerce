@@ -44,10 +44,10 @@ public class User {
     //Todo: implementare con spring security role
 
     // join con le altre tabelle
-    @ToString.Exclude
+
     @OneToMany(mappedBy = "seller")
     private List<Product> product;
-    @ToString.Exclude
+
     @OneToMany(mappedBy = "customer")
     private List<Order> orders;
 

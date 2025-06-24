@@ -12,7 +12,6 @@ import java.util.UUID;
 
 @Data
 @Entity
-@ToString
 public class Category {
 
         @Id
