@@ -2,7 +2,7 @@ package com.example.eCommerce.enums;
 
 public enum OrderState {
 
-    NEL_CARELLO,
+    NEL_CARRELLO,
     IN_ELABORAZIONE,
     SPEDITO,
     CONSEGNATO,

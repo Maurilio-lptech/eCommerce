@@ -62,11 +62,11 @@ public class OrderServiceImpl implements OrderService {
 
         // Imposta lo stato iniziale (se non specificato)
         if (order.getState() == null) {
-            order.setState(OrderState.NEL_CARELLO);
+            order.setState(OrderState.NEL_CARRELLO);
         }
 
 
-        //TODO: ogni prodotto che ordina devo creare l'orderd details singolarmente
+        // ogni prodotto che ordina devo creare l'orderd details singolarmente
         //prendo dalla lista
         //imposto id cliente
         //imposto id ordine
@@ -119,7 +119,7 @@ public class OrderServiceImpl implements OrderService {
         // Imposta lo stato ordine
         switch (orderDto.getState().trim().toUpperCase()) {
             case "NEL_CARRELLO":
-                order.setState(OrderState.NEL_CARELLO);
+                order.setState(OrderState.NEL_CARRELLO);
                 break;
 
             case "IN_ELABORAZIONE":
@@ -190,21 +190,38 @@ public class OrderServiceImpl implements OrderService {
         return orderPage.map(mapper::toDto);
     }
 
-    //Todo: get all order by state
-
     public List<OrderDto> getAllOrdersByState(String state) {
 
-        if (!state.trim().equalsIgnoreCase("NEL_CARELLO") &&
-                !state.trim().equalsIgnoreCase("IN_ELABORAZIONE") &&
-                !state.trim().equalsIgnoreCase("SPEDITO") &&
-                !state.trim().equalsIgnoreCase("CONSEGNATO") &&
-                !state.trim().equalsIgnoreCase("ANNULATO")) {
-            throw new IllegalArgumentException("Inserire uno stato valido");
+        OrderState orderState;
+
+        switch (state.trim().toUpperCase()) {
+            case "NEL_CARRELLO":
+                orderState=OrderState.NEL_CARRELLO;
+            break;
+            case "IN_ELABORAZIONE":
+                orderState=OrderState.IN_ELABORAZIONE;
+            break;
+
+            case "SPEDITO":
+                orderState=OrderState.SPEDITO;
+            break;
+
+            case "CONSEGNATO":
+                orderState=OrderState.CONSEGNATO;
+            break;
+
+            case "ANNULATO":
+                orderState=OrderState.ANNULATO;
+            break;
+            default:
+                throw new IllegalArgumentException("Stato ordine " + state + " non valido");
         }
 
-        return repository.findAllByState(state).stream()
+        return repository.findAllByState(orderState).stream()
                 .map(mapper::toDto)
                 .collect(Collectors.toList());
+
+
     }
 
 
