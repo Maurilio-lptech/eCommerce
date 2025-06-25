@@ -4,6 +4,7 @@ package com.example.eCommerce.controller;
 import com.example.eCommerce.dto.OrderDetailsDto;
 import com.example.eCommerce.dto.OrderDto;
 import com.example.eCommerce.enums.OrderState;
+import com.example.eCommerce.service.CartServiceImpl;
 import com.example.eCommerce.service.OrderDetailsService;
 import com.example.eCommerce.service.OrderService;
 import lombok.RequiredArgsConstructor;
@@ -21,41 +22,45 @@ import java.util.UUID;
 @CrossOrigin(origins = "*")
 public class CartController {
 
-    private final OrderService orderService;
-    private final OrderDetailsService DetailsServiceService;
+    private final CartServiceImpl service;
 
-    //Todo:createCart
-    //Todo: trasform cart to order check out
-    //Todo:addToCart
-    //todo: removeFromCart
-    //Todo: svuotare il carello
+    //createCart
+    //trasform cart to order check out
+    //addToCart
+    // removeFromCart
+    // svuotare il carello
 
-    @PostMapping("/new/{customerId}")
-    public ResponseEntity<OrderDto> createCart(@PathVariable  UUID customerId){
-        OrderDto cartOrder=new OrderDto();
-        cartOrder.setState(OrderState.NEL_CARRELLO.toString());
-        cartOrder.setCustomer_id(customerId);
-        return ResponseEntity.status(HttpStatus.CREATED).body(orderService.createOrder(cartOrder));
+    @GetMapping("/{customerId}/")
+    public ResponseEntity<OrderDto> getCart(@PathVariable  UUID customerId){
+        return ResponseEntity.ok(service.getCart(customerId));
     }
 
+    @PostMapping("/new/{customerId}/")
+    public ResponseEntity<OrderDto> createCart(@PathVariable  UUID customerId){
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.createCart(customerId));
+    }
 
     @PostMapping("/add/{customerId}/")
     public ResponseEntity<OrderDto> addToCart(@PathVariable  UUID customerId, @RequestBody OrderDetailsDto orderDetailsDto){
-        return ResponseEntity.status(HttpStatus.CREATED).body(orderService.addToCart(customerId , orderDetailsDto));
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.addToCart(customerId , orderDetailsDto));
+    }
+
+    @PostMapping("/remove/{customerId}/")
+    public ResponseEntity<OrderDto> removeFromCart(@PathVariable  UUID customerId, @RequestBody OrderDetailsDto orderDetailsDto){
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.removeFromCart(customerId , orderDetailsDto));
     }
 
 
-    //add to cart
-    //inserire un order details dentro il carello nel db esistente nel db
-    //check se l'utente è valido
-    // check se esiste il carello del utente --> altrimenti lo si crea
-    //check quantity>0
+    @PostMapping("/clear/{customerId}/")
+    public ResponseEntity<Void> clearCart(@PathVariable  UUID customerId){
+        service.clearCart(customerId);
+        return ResponseEntity.noContent().build();
+    }
 
-
-
-
-
-
+    @PostMapping("/checkout/{customerId}/")
+    public ResponseEntity<OrderDto> checkout(@PathVariable  UUID customerId){
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.checkout(customerId));
+    }
 
 
 
