@@ -103,11 +103,5 @@ public class OrderDetailsServiceImpl implements  OrderDetailsService{
                 .collect(Collectors.toList());
     }
 
-//    public OrderDetailsDto addToCart(OrderDetailsDto orderDetailsDto);
-    //se non esiste un carello (o lo creo o dico che non esiste un carello e lancio un errore)
-    //penso di creare un service solo per il carello che implementa il repo o il service di orderdetail e order
-    // se nel carello esiste già un orderDetails con lo stesso prodotto incremento la quantita
 
-//    public OrderDetailsDto removeFromCart(OrderDetailsDto orderDetailsDto);
-    // se nel carello esiste già un orderDetails con lo stesso prodotto decremento la quantita
 }

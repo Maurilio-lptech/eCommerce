@@ -6,7 +6,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.Data;
-import lombok.ToString;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.io.Serializable;
@@ -46,7 +45,7 @@ public class Order implements Serializable {
     private Double total;
 
 
-    @OneToMany(mappedBy = "order", cascade=CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderDetails> orderDetailsList;
 
 
@@ -54,11 +53,8 @@ public class Order implements Serializable {
     @PreUpdate
     private void validateOrder() {
         if (orderDetailsList == null || orderDetailsList.isEmpty()) {
-           this.total=0.0;
-        }
-
-        // Calcola il totale
-        if (total == null) {
+            this.total = 0.0;
+        } else {
             this.total = orderDetailsList.stream()
                     .mapToDouble(od -> od.getQuantity() * od.getPriceForUnit())
                     .sum();

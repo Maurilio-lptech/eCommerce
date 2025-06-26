@@ -18,7 +18,7 @@ public class CartServiceImpl implements CartService {
 
     private final OrderService orderService;
     private final ProductService productService;
-    //TODO: remuovi la quantita
+
 
     //  Crea un nuovo carrello per un utente
     public OrderDto createCart(UUID customerId) {
@@ -63,6 +63,8 @@ public class CartServiceImpl implements CartService {
             cart.getOrderDetailsList().add(newItem);
         }
 
+
+        calculateTotal(cart);
         return orderService.updateOrder(cart);
     }
 
@@ -102,7 +104,7 @@ public class CartServiceImpl implements CartService {
             throw new IllegalArgumentException("prodotto non trovato nel carello");
         }
 
-
+        calculateTotal(cart);
         return orderService.updateOrder(cart);
     }
 
@@ -114,8 +116,9 @@ public class CartServiceImpl implements CartService {
     }
 
     // Checkout (converte carrello in ordine)
-    public OrderDto checkout(UUID customerId) {
-        OrderDto cart = orderService.getCart(customerId);
+    public OrderDto checkout(OrderDto orderDto) {
+        OrderDto cart = orderService.getCart(orderDto.getCustomer_id());
+        cart.setShipmentAddress(orderDto.getShipmentAddress());
         cart.setState(OrderState.IN_ELABORAZIONE.toString());
         return orderService.updateOrder(cart);
     }
@@ -133,4 +136,13 @@ public class CartServiceImpl implements CartService {
 
         return carts.isEmpty() ? createCart(customerId) : carts.get(0);
     }
+
+    //calcolo il totale del carello prima di salvare le modifiche
+    private void calculateTotal(OrderDto order) {
+        double total = order.getOrderDetailsList().stream()
+                .mapToDouble(item -> item.getQuantity() * item.getPriceForUnit())
+                .sum();
+        order.setTotal(total);
+    }
+
 }

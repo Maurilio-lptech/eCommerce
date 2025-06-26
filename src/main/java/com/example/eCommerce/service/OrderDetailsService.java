@@ -28,10 +28,7 @@ public interface OrderDetailsService {
 
 
 
-//    public OrderDetailsDto addProduct(OrderDetailsDto orderDetailsDto);
-//    public void removeProduct(OrderDetailsDto orderDetailsDto);
-//
-//    public List<OrderDetailsDto> getAllOrderDetailsByIdOrder(UUID Order);
+
 
 
 }

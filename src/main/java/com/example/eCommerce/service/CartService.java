@@ -15,7 +15,7 @@ public interface CartService {
 
     public void clearCart(UUID customerId);
 
-    public OrderDto checkout(UUID customerId);
+    public OrderDto checkout(OrderDto orderDto);
 
     public OrderDto getCart(UUID customerId);
 }
