@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
@@ -30,6 +31,7 @@ public class OrderDetailsServiceImpl implements  OrderDetailsService{
     private final ProductRepository productRepository;
 
     //CRUD
+    @Transactional
     public OrderDetailsDto createOrderDetails(OrderDetailsDto orderDetailsDto){
 
         // Verifico se ordine e prodotto sono presenti nel db
@@ -47,7 +49,7 @@ public class OrderDetailsServiceImpl implements  OrderDetailsService{
 
         return mapper.toDto(repository.save(newOrderDetails));
     }
-
+    @Transactional
     public void deleteOrderDetails(UUID id){
         if(!repository.existsById(id)){
             throw new EntityNotFoundException("Dettaglio ordine con id "+id+" non trovato nel DB");
@@ -56,6 +58,7 @@ public class OrderDetailsServiceImpl implements  OrderDetailsService{
         repository.deleteById(id);
     }
 
+    @Transactional
     public OrderDetailsDto updateOrderDetails(UUID id, OrderDetailsDto orderDetailsDto){
         // Verifico se ordine e prodotto sono presenti nel db
         OrderDetails orderDetails= repository.findById(orderDetailsDto.getId())
@@ -75,17 +78,20 @@ public class OrderDetailsServiceImpl implements  OrderDetailsService{
         return mapper.toDto(repository.save(updatedOrderDetails));
     }
 
+    @Transactional(readOnly = true)
     public OrderDetailsDto getOrderDetailsById(UUID id){
         return mapper.toDto(repository.findById(id)
                 .orElseThrow(()->new EntityNotFoundException("OrderDetails con id "+id+" non trovato nel db")));
     }
 
+    @Transactional(readOnly = true)
     public Page<OrderDetailsDto> getAllOrderDetails(Pageable pageable){
         //trovo tutti gli order details e li converto in dto;
         return repository.findAll(pageable).map(mapper::toDto);
     }
 
     //OTHER
+    @Transactional(readOnly = true)
     public List<OrderDetailsDto> getAllOrderDetailsByOrderId(UUID orderId){
         //trovo tutti gli order details di un order e li converto in dto;
         return repository.findAllByOrderId(orderId)
@@ -95,6 +101,7 @@ public class OrderDetailsServiceImpl implements  OrderDetailsService{
     }
 
     //CART
+    @Transactional(readOnly = true)
     public List<OrderDetailsDto> getAllCartOrderDetails(){
 
         return repository.findAllByOrderState(OrderState.NEL_CARRELLO)

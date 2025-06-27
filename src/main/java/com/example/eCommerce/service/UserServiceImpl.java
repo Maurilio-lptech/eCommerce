@@ -5,11 +5,11 @@ import com.example.eCommerce.entity.User;
 import com.example.eCommerce.mapper.UserMapper;
 import com.example.eCommerce.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -62,6 +62,7 @@ public class UserServiceImpl implements UserService {
         return mapper.toDto(repository.save(existingUser));
     }
 
+    @Transactional(readOnly = true)
     public Page<UserDto> getAllUsers(Pageable pageable) {
         Page<User> userPage = repository.findAll(pageable);
         return userPage.map(mapper::toDto);

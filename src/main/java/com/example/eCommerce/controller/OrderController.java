@@ -10,6 +10,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,6 +26,7 @@ public class OrderController {
     private final OrderService service;
 
     @PostMapping("/new")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<OrderDto> createOrder(@RequestBody @NotNull OrderDto EntityToCreate){
         if(EntityToCreate.getId()!=null){
             EntityToCreate.setId(null);
@@ -32,29 +35,34 @@ public class OrderController {
     }
 
     @PutMapping("/update")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<OrderDto> updateOrder(@RequestBody @NotNull OrderDto updatedEntity){
         return ResponseEntity.ok(service.updateOrder(updatedEntity));
     }
 
     @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteOrder(@PathVariable @NotNull UUID id){
         service.deleteOrder(id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<OrderDto> getOrderById(@PathVariable UUID id){
         return ResponseEntity.ok(service.getOrderById(id));
     }
 
-
     @GetMapping("/AllOrder")
+    @PreAuthorize("hasRole('ADMIN')")
     public Page<OrderDto> findAllOrder(Pageable pageable){
         return service.getAllOrders(pageable);
     }
 
     //TODO: paginazione da implementare
+
     @GetMapping("/AllOrder/{state}")
+    @PreAuthorize("hasRole('ADMIN')")
     public List<OrderDto> findAllOrderByState(@PathVariable String state){
         return service.getAllOrdersByState(state);
     }

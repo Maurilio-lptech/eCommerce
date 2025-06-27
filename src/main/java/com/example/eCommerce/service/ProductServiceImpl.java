@@ -9,10 +9,11 @@ import com.example.eCommerce.repository.CategoryRepository;
 import com.example.eCommerce.repository.ProductRepository;
 import com.example.eCommerce.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
+
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -41,11 +42,13 @@ public class ProductServiceImpl implements ProductService {
 
     //CRUD
 
+    @Transactional(readOnly = true)
     public ProductDto getProductById(UUID id) {
         return mapper.toDto(repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Nessun product trovato con id" + id)));
     }
 
+    @Transactional(readOnly = true)
     public Page<ProductDto> getAllProductByName(String name, Pageable pageable) {
 
         Page<Product> productByName = repository.findByNameContains(name, pageable);
@@ -131,12 +134,14 @@ public class ProductServiceImpl implements ProductService {
         return mapper.toDto(repository.save(productToUpdate));
     }
 
+    @Transactional(readOnly = true)
     public Page<ProductDto> getAllProducts(Pageable pageable) {
         Page<Product> productPage = repository.findAll(pageable);
 
         return productPage.map(mapper::toDto);
     }
 
+    @Transactional(readOnly = true)
     public Page<ProductDto> searchProduct(String name, String category, Double price, Pageable pageable) {
         return repository.search(name, category, price, pageable).map(mapper::toDto);
     }

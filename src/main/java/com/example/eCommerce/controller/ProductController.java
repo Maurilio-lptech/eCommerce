@@ -15,6 +15,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -49,6 +50,7 @@ public class ProductController {
 
     //CRUD
     @PostMapping(value="/new", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ProductDto> createProduct(@RequestPart("product")  ProductDto EntityToCreate,
                                                     @RequestPart("image") MultipartFile image) throws IOException {
         if (EntityToCreate.getId() != null) {
@@ -59,7 +61,8 @@ public class ProductController {
     }
 
     // Endpoint GET per recuperare un'immagine dal server
-    @GetMapping("/images/{filename:.+}")  // (il ".+" serve per catturare l'estensione)
+    @GetMapping("/images/{filename:.+}") // (il ".+" serve per catturare l'estensione)
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Resource> getImage(@PathVariable String filename) {
         try {
             // Costruisce il percorso completo del file unendo:
@@ -87,11 +90,13 @@ public class ProductController {
     }
 
     @PutMapping("/update/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ProductDto> updateProduct(@PathVariable UUID id, @RequestBody ProductDto ProductToUpdate) {
         return ResponseEntity.ok(service.updateProduct(id, ProductToUpdate));
     }
 
     @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteProduct(@PathVariable UUID id) {
         service.deleteProduct(id);
         return ResponseEntity.noContent().build();

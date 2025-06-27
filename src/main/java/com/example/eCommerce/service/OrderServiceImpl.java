@@ -13,12 +13,12 @@ import com.example.eCommerce.repository.OrderRepository;
 import com.example.eCommerce.repository.ProductRepository;
 import com.example.eCommerce.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -36,7 +36,7 @@ public class OrderServiceImpl implements OrderService {
     private final OrderMapper mapper;
     private final OrderDetailsMapper orderDetailsMapper;
 
-
+    @Transactional(readOnly = true)
     public OrderDto getOrderById(UUID id) {
         return mapper.toDto(repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Nessun utente trovato con id" + id)));
@@ -234,12 +234,14 @@ public class OrderServiceImpl implements OrderService {
         repository.deleteById(id);
     }
 
+    @Transactional(readOnly = true)
     public Page<OrderDto> getAllOrders(Pageable pageable) {
         Page<Order> orderPage = repository.findAll(pageable);
 
         return orderPage.map(mapper::toDto);
     }
 
+    @Transactional(readOnly = true)
     public List<OrderDto> getAllOrdersByState(String state) {
 
         // CONSIGLIATO DA INTELLIJ
@@ -259,6 +261,7 @@ public class OrderServiceImpl implements OrderService {
 
     }
 
+    @Transactional(readOnly=true)
     public OrderDto getCart(UUID customerId) {
         Order cart = repository.findByStateAndCustomerId(OrderState.NEL_CARRELLO, customerId).orElseThrow(() -> new EntityNotFoundException("L'utente non ha un carrello"));
         return mapper.toDto(cart);

@@ -6,12 +6,13 @@ import com.example.eCommerce.entity.Category;
 import com.example.eCommerce.mapper.CategoryMapper;
 import com.example.eCommerce.repository.CategoryRepository;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
+
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -23,7 +24,7 @@ public class CategoryServiceImpl implements CategoryService {
     private final CategoryMapper mapper;
 
     //CRUD
-
+    @Transactional(readOnly = true)
     public CategoryDto getCategoryById(UUID id){
         return mapper.toDto(repository.findById(id)
                 .orElseThrow( ()-> new EntityNotFoundException("Nessun utente trovato con id" + id)));
@@ -69,6 +70,7 @@ public class CategoryServiceImpl implements CategoryService {
         return mapper.toDto(repository.save(existingCategory));
     }
 
+    @Transactional(readOnly = true)
     public Page<CategoryDto> getAllCategories(Pageable pageable){
         Page<Category> categoryPage = repository.findAll(pageable);
 

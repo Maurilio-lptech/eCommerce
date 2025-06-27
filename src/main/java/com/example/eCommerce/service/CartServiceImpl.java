@@ -4,9 +4,9 @@ import com.example.eCommerce.dto.OrderDetailsDto;
 import com.example.eCommerce.dto.OrderDto;
 import com.example.eCommerce.dto.ProductDto;
 import com.example.eCommerce.enums.OrderState;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -109,6 +109,7 @@ public class CartServiceImpl implements CartService {
     }
 
     // Svuota il carrello
+    @Transactional
     public void clearCart(UUID customerId) {
         OrderDto cart = orderService.getCart(customerId);
         cart.getOrderDetailsList().clear();
@@ -116,6 +117,7 @@ public class CartServiceImpl implements CartService {
     }
 
     // Checkout (converte carrello in ordine)
+    @Transactional
     public OrderDto checkout(OrderDto orderDto) {
         OrderDto cart = orderService.getCart(orderDto.getCustomer_id());
         cart.setShipmentAddress(orderDto.getShipmentAddress());
@@ -123,11 +125,13 @@ public class CartServiceImpl implements CartService {
         return orderService.updateOrder(cart);
     }
 
+    @Transactional(readOnly = true)
     public OrderDto getCart(UUID customerId){
         return orderService.getCart(customerId);
     }
 
     //metodo per controllare se c'è un carello altrimenti lo creo
+    @Transactional
     private OrderDto findOrCreateCart(UUID customerId) {
         List<OrderDto> carts = orderService.getAllOrdersByState(OrderState.NEL_CARRELLO.toString())
                 .stream()
