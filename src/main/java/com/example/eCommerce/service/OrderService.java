@@ -27,5 +27,9 @@ public interface OrderService {
     //cart
     public OrderDto getCart(UUID customerId);
 
+    //User order
+    public Page<OrderDto> getAllUserOrdersByState(UUID customerId, String state, Pageable pageable);
 
+    public OrderDto getUserOrderById(UUID customerId, UUID orderId);
+    Page<OrderDto> getAllUserOrders(UUID customerId, Pageable pageable);
 }

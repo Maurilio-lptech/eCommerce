@@ -164,7 +164,7 @@ public class OrderServiceImpl implements OrderService {
         // Validazione stato carrello
         boolean isCart = false;
         if (orderDto.getState().equals("NEL_CARRELLO")) {
-             isCart = true;
+            isCart = true;
             List<Order> existingCart = repository.findAllByStateAndCustomerId(OrderState.NEL_CARRELLO, orderDto.getCustomer_id());
             if (!existingCart.isEmpty() && !existingCart.get(0).getId().equals(orderDto.getId())) {
                 throw new IllegalArgumentException("Esiste già un carrello per questo utente");
@@ -260,11 +260,43 @@ public class OrderServiceImpl implements OrderService {
 
 
     }
-
-    @Transactional(readOnly=true)
+    //Todo: fanne uno con la paginazione ^
+    @Transactional(readOnly = true)
     public OrderDto getCart(UUID customerId) {
         Order cart = repository.findByStateAndCustomerId(OrderState.NEL_CARRELLO, customerId).orElseThrow(() -> new EntityNotFoundException("L'utente non ha un carrello"));
         return mapper.toDto(cart);
+    }
+
+    //user metod
+    @Transactional(readOnly = true)
+    public Page<OrderDto> getAllUserOrders(UUID customerId, Pageable pageable) {
+        Page<Order> orderPage = repository.findAllByCustomerId(customerId, pageable);
+
+        return orderPage.map(mapper::toDto);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<OrderDto> getAllUserOrdersByState(UUID customerId, String state, Pageable pageable) {
+        User user = userRepository.findById(customerId)
+                .orElseThrow(() -> new EntityNotFoundException("user non trovato nel db"));
+
+        OrderState orderState = switch (state.trim().toUpperCase()) {
+            case "NEL_CARRELLO" -> OrderState.NEL_CARRELLO;
+            case "IN_ELABORAZIONE" -> OrderState.IN_ELABORAZIONE;
+            case "SPEDITO" -> OrderState.SPEDITO;
+            case "CONSEGNATO" -> OrderState.CONSEGNATO;
+            case "ANNULATO" -> OrderState.ANNULATO;
+            default -> throw new IllegalArgumentException("Stato ordine " + state + " non valido");
+        };
+
+        return repository.findAllByStateAndCustomerId(orderState, user.getId(), pageable).map(mapper::toDto);
+
+    }
+
+    @Transactional(readOnly = true)
+    public OrderDto getUserOrderById(UUID customerId, UUID orderId) {
+        return mapper.toDto(repository.findByIdAndCustomerId(orderId,customerId)
+                .orElseThrow(() -> new EntityNotFoundException("Nessun utente trovato con id  " + customerId+" e order id  "+ orderId+" ")));
     }
 
 
