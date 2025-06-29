@@ -91,7 +91,7 @@ public class ProductController {
 
     @PutMapping("/update")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ProductDto> updateProduct( @RequestBody ProductDto ProductToUpdate,  @RequestPart("image") MultipartFile image) throws IOException {
+    public ResponseEntity<ProductDto> updateProduct( @RequestPart("product") ProductDto ProductToUpdate,  @RequestPart("image") MultipartFile image) throws IOException {
         return ResponseEntity.ok(service.updateProduct( ProductToUpdate, image));
     }
 
