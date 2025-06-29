@@ -116,9 +116,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Transactional
-    public ProductDto updateProduct(UUID id, @NotNull ProductDto productDto) {
+    public ProductDto updateProduct( @NotNull ProductDto productDto, MultipartFile image) throws IOException {
         //TODO:check ruolo venditore
-        Product existingProduct = repository.findById(id)
+        Product existingProduct = repository.findById(productDto.getId())
                 .orElseThrow(() -> new EntityNotFoundException("product con id" + productDto.getId() + " non trovato nel db"));
 
         Category category = categoryRepository.findById(productDto.getCategory_id())
@@ -128,10 +128,18 @@ public class ProductServiceImpl implements ProductService {
                 .orElseThrow(() -> new EntityNotFoundException("Venditore con id" + productDto.getSeller_id() + "non trovato"));
 
 
-        Product productToUpdate = mapper.toEntity(productDto);
-        productToUpdate.setCategory(category);
-        productToUpdate.setSeller(seller);
-        return mapper.toDto(repository.save(productToUpdate));
+        existingProduct.setName(productDto.getName());
+        existingProduct.setCategory(category);
+        existingProduct.setSeller(seller);
+        existingProduct.setPrice(productDto.getPrice());
+        existingProduct.setQuantity_available(productDto.getQuantity_available());
+        existingProduct.setDescription(productDto.getDescription());
+
+        if (image != null && !image.isEmpty()) {
+            String imagePath = saveImage(image);
+            existingProduct.setImageName(imagePath);
+        }
+        return mapper.toDto(repository.save(existingProduct));
     }
 
     @Transactional(readOnly = true)

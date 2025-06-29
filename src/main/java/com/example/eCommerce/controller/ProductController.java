@@ -89,10 +89,10 @@ public class ProductController {
         }
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/update")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ProductDto> updateProduct(@PathVariable UUID id, @RequestBody ProductDto ProductToUpdate) {
-        return ResponseEntity.ok(service.updateProduct(id, ProductToUpdate));
+    public ResponseEntity<ProductDto> updateProduct( @RequestBody ProductDto ProductToUpdate,  @RequestPart("image") MultipartFile image) throws IOException {
+        return ResponseEntity.ok(service.updateProduct( ProductToUpdate, image));
     }
 
     @DeleteMapping("/delete/{id}")

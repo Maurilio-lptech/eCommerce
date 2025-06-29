@@ -15,7 +15,7 @@ public interface ProductService {
 
     public void deleteProduct(UUID id);
 
-    public ProductDto updateProduct(UUID id, ProductDto productDto);
+    public ProductDto updateProduct(ProductDto productDto, MultipartFile image)throws IOException;
 
     public Page<ProductDto> getAllProducts(Pageable pageable);
 

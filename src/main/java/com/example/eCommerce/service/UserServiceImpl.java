@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService {
         existingUser.setSurname(userDto.getSurname());
         existingUser.setAddress(userDto.getAddress());
         existingUser.setPhone(userDto.getPhone());
-        //existingUser.setRole(userDto.getRole());
+
 
 
         return mapper.toDto(repository.save(existingUser));
