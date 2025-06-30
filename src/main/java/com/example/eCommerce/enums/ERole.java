@@ -1,4 +1,4 @@
-package com.example.eCommerce.securitySpring.models;
+package com.example.eCommerce.enums;
 
 public enum ERole {
   ROLE_USER,

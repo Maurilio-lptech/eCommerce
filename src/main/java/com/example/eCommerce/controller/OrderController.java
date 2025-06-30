@@ -1,10 +1,7 @@
 package com.example.eCommerce.controller;
-import com.example.eCommerce.dto.CategoryDto;
-import com.example.eCommerce.dto.OrderDetailsDto;
 import com.example.eCommerce.dto.OrderDto;
-import com.example.eCommerce.entity.Order;
 import com.example.eCommerce.securitySpring.security.services.UserDetailsImpl;
-import com.example.eCommerce.service.OrderService;
+import com.example.eCommerce.serviceTest.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Page;
@@ -14,8 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.example.eCommerce.service;
+package com.example.eCommerce.serviceTest;
 
 import com.example.eCommerce.dto.UserDto;
 import com.example.eCommerce.entity.User;

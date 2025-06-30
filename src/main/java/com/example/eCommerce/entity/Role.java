@@ -1,9 +1,8 @@
-package com.example.eCommerce.securitySpring.models;
-import jakarta.annotation.PostConstruct;
+package com.example.eCommerce.entity;
+import com.example.eCommerce.enums.ERole;
 import jakarta.persistence.*;
 import org.hibernate.annotations.UuidGenerator;
 
-import java.util.Arrays;
 import java.util.UUID;
 
 @Entity

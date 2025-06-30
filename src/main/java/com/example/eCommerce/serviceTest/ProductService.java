@@ -1,4 +1,4 @@
-package com.example.eCommerce.service;
+package com.example.eCommerce.serviceTest;
 
 import com.example.eCommerce.dto.ProductDto;
 import org.springframework.data.domain.Page;

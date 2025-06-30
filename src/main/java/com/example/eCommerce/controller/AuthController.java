@@ -1,9 +1,10 @@
-package com.example.eCommerce.securitySpring;
+package com.example.eCommerce.controller;
 
 import com.example.eCommerce.entity.User;
 import com.example.eCommerce.repository.UserRepository;
-import com.example.eCommerce.securitySpring.models.ERole;
-import com.example.eCommerce.securitySpring.models.Role;
+import com.example.eCommerce.enums.ERole;
+import com.example.eCommerce.entity.Role;
+import com.example.eCommerce.repository.RoleRepository;
 import com.example.eCommerce.securitySpring.payload.request.LoginRequest;
 import com.example.eCommerce.securitySpring.payload.request.SignupRequest;
 import com.example.eCommerce.securitySpring.payload.response.JwtResponse;
@@ -25,11 +26,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import static com.mysql.cj.conf.PropertyKey.logger;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController

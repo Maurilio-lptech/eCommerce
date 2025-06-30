@@ -1,10 +1,9 @@
 package com.example.eCommerce.controller;
 
 import com.example.eCommerce.dto.ProductDto;
-import com.example.eCommerce.service.ProductService;
+import com.example.eCommerce.serviceTest.ProductService;
 
 import jakarta.annotation.PostConstruct;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;

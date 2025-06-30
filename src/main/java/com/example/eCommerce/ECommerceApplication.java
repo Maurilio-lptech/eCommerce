@@ -1,8 +1,8 @@
 package com.example.eCommerce;
 
-import com.example.eCommerce.securitySpring.RoleRepository;
-import com.example.eCommerce.securitySpring.models.ERole;
-import com.example.eCommerce.securitySpring.models.Role;
+import com.example.eCommerce.repository.RoleRepository;
+import com.example.eCommerce.enums.ERole;
+import com.example.eCommerce.entity.Role;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;

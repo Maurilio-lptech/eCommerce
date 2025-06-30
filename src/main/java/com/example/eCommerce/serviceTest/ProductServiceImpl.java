@@ -1,4 +1,4 @@
-package com.example.eCommerce.service;
+package com.example.eCommerce.serviceTest;
 
 import com.example.eCommerce.dto.ProductDto;
 import com.example.eCommerce.entity.Category;
@@ -18,7 +18,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;

@@ -1,7 +1,7 @@
 package com.example.eCommerce.controller;
 
 import com.example.eCommerce.dto.CategoryDto;
-import com.example.eCommerce.service.CategoryService;
+import com.example.eCommerce.serviceTest.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Page;

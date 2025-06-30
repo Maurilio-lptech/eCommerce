@@ -114,8 +114,9 @@ public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
           .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
           .authorizeHttpRequests(auth -> auth
                   .requestMatchers("/api/auth/**").permitAll() // Tutti gli endpoint /api/auth sono pubblici
-                  .requestMatchers("/api/test/**").permitAll()
-                  .requestMatchers("/api/product/**").permitAll()// Solo per sviluppo, rimuovi in produzione
+                  .requestMatchers("/api/test/**").permitAll() //TODO:rimuovere  prima della produzione
+                  .requestMatchers("/api/product/**").permitAll()
+                  .requestMatchers("/api/category/**").permitAll()
                   .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Necessario per CORS preflight
                   .anyRequest().authenticated()
           );
