@@ -1,4 +1,4 @@
-package com.example.eCommerce.serviceTest;
+package com.example.eCommerce.service;
 
 import com.example.eCommerce.dto.ProductDto;
 import com.example.eCommerce.entity.Category;

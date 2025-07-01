@@ -1,7 +1,7 @@
 package com.example.eCommerce.controller;
 
 import com.example.eCommerce.dto.UserDto;
-import com.example.eCommerce.serviceTest.UserService;
+import com.example.eCommerce.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

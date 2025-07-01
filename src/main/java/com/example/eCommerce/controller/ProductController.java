@@ -1,7 +1,7 @@
 package com.example.eCommerce.controller;
 
 import com.example.eCommerce.dto.ProductDto;
-import com.example.eCommerce.serviceTest.ProductService;
+import com.example.eCommerce.service.ProductService;
 
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ import java.util.UUID;
 public class ProductController {
 
     @Value("${file.upload-dir:./uploads/}")
-    private String uploadDir;
+    public String uploadDir;
 
     @Autowired
     private ProductService service;

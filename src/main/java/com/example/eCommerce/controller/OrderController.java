@@ -1,7 +1,7 @@
 package com.example.eCommerce.controller;
 import com.example.eCommerce.dto.OrderDto;
 import com.example.eCommerce.securitySpring.security.services.UserDetailsImpl;
-import com.example.eCommerce.serviceTest.OrderService;
+import com.example.eCommerce.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Page;
