@@ -71,36 +71,36 @@ class CartControllerTest {
     @Test
     void getCart_ShouldReturnCart() throws Exception {
         OrderDto expectedCart = new OrderDto(); //creo un dto  per il carrello che mi aspetto
-        when(cartService.getCart(testUserId)).thenReturn(expectedCart); // quando passo un customer id mi aspetto che mi ritorna il carello se prensente nel db
+        when(cartService.getCart(testUserId)).thenReturn(expectedCart); // quando passo un customer id mi aspetto che mi ritorna il carrello se prensente nel db
 
         mockMvc.perform(get("/api/cart/"))// simulo una richiesta get con mockMvc
                 .andExpect(status().isOk()) // quando lo stato della chiamata è ok
-                .andExpect(content().json(objectMapper.writeValueAsString(expectedCart))); // mi aspetto un carello
+                .andExpect(content().json(objectMapper.writeValueAsString(expectedCart))); // mi aspetto un carrello
 
         verify(cartService).getCart(testUserId); // verifico la condizione
     }
 
-    //creazione di un carello se non esiste un carello un carello di un utente
+    //creazione di un carrello se non esiste un carrello un carrello di un utente
     @Test
     void createCart_ShouldCreateNewCart() throws Exception {
         OrderDto newCart = new OrderDto(); // order dto
-        when(cartService.createCart(testUserId)).thenReturn(newCart); // quando passo un id utente mi aspetto un ritorno di  nuovo carello
+        when(cartService.createCart(testUserId)).thenReturn(newCart); // quando passo un id utente mi aspetto un ritorno di  nuovo carrello
 
         mockMvc.perform(post("/api/cart/new"))
                 .andExpect(status().isCreated()) // quando il response entity restituisce CREATED
-                .andExpect(content().json(objectMapper.writeValueAsString(newCart))); // mi aspetto che ritorni un orderDto che rapressenta il nuovo carello
+                .andExpect(content().json(objectMapper.writeValueAsString(newCart))); // mi aspetto che ritorni un orderDto che rapressenta il nuovo carrello
 
         verify(cartService).createCart(testUserId);
     }
 
-    //passando un orderDetaisDto valido mi aspetto che restiuisca il carello del utente con almeno un ordine dto aggiunto
+    //passando un orderDetaisDto valido mi aspetto che restiuisca il carrello del utente con almeno un ordine dto aggiunto
     @Test
     void addToCart_ShouldAddItem() throws Exception {
         OrderDetailsDto orderDetailsDto = new OrderDetailsDto();
         OrderDto updatedCart = new OrderDto();
 
         when(cartService.addToCart(eq(testUserId), any(OrderDetailsDto.class))).thenReturn(updatedCart);
-        //quando viene passato un idUtente e un qualsiasi orderDetailsDto dovrebbe ritornare un carello aggiornato
+        //quando viene passato un idUtente e un qualsiasi orderDetailsDto dovrebbe ritornare un carrello aggiornato
 
         mockMvc.perform(post("/api/cart/add")
                         .contentType(MediaType.APPLICATION_JSON) // simulo una chiamata con passagio di un json
@@ -113,7 +113,7 @@ class CartControllerTest {
         // verifica che il primo parametro sia uguale a userid
     }
 
-    //rimovere un prodotto da un carello e mi aspetto un carello aggiornato
+    //rimovere un prodotto da un carrello e mi aspetto un carrello aggiornato
     //procedimento simile al precedente
     @Test
     void removeFromCart_ShouldRemoveItem() throws Exception {
@@ -131,7 +131,7 @@ class CartControllerTest {
         verify(cartService).removeFromCart(eq(testUserId), any(OrderDetailsDto.class));
     }
 
-    //puluzia di un carello mi aspetto che mandando un id utente mi pulisca il carello e non restituisca niente al controller
+    //puluzia di un carrello mi aspetto che mandando un id utente mi pulisca il carrello e non restituisca niente al controller
     //la risposta che mi aspetto è un no content
     @Test
     void clearCart_ShouldClearCart() throws Exception {

@@ -20,7 +20,7 @@ public interface OrderDetailsRepository extends JpaRepository<OrderDetails, UUID
     public Optional<OrderDetails> findById(@NotNull UUID id);
     //    @Query("SELECT od FROM order_details od " +
     //            "JOIN customer_order o ON od.order_id=o.id " +
-    //            "WHERE state='NEL_CARELLO'")
+    //            "WHERE state='NEL_carrello'")
     //    List<OrderDetails> findAllCartOrderDetails();
 
     @Query("SELECT od FROM OrderDetails od " +

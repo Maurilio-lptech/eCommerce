@@ -54,7 +54,7 @@ public class CartServiceImpl implements CartService {
             }
         }
 
-        //se il prodotto è già nel carello
+        //se il prodotto è già nel carrello
         if (!productExistsInCart) {
             OrderDetailsDto newItem = new OrderDetailsDto();
             newItem.setProduct_id(productId);
@@ -99,9 +99,9 @@ public class CartServiceImpl implements CartService {
             }
         }
 
-        //se il prodotto è già nel carello
+        //se il prodotto è già nel carrello
         if (!productExistsInCart) {
-            throw new IllegalArgumentException("prodotto non trovato nel carello");
+            throw new IllegalArgumentException("prodotto non trovato nel carrello");
         }
 
         calculateTotal(cart);
@@ -130,7 +130,7 @@ public class CartServiceImpl implements CartService {
         return orderService.getCart(customerId);
     }
 
-    //metodo per controllare se c'è un carello altrimenti lo creo
+    //metodo per controllare se c'è un carrello altrimenti lo creo
     @Transactional
     private OrderDto findOrCreateCart(UUID customerId) {
         List<OrderDto> carts = orderService.getAllOrdersByState(OrderState.NEL_CARRELLO.toString())
@@ -141,7 +141,7 @@ public class CartServiceImpl implements CartService {
         return carts.isEmpty() ? createCart(customerId) : carts.get(0);
     }
 
-    //calcolo il totale del carello prima di salvare le modifiche
+    //calcolo il totale del carrello prima di salvare le modifiche
     private void calculateTotal(OrderDto order) {
         double total = order.getOrderDetailsList().stream()
                 .mapToDouble(item -> item.getQuantity() * item.getPriceForUnit())

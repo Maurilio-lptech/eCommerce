@@ -1,6 +1,5 @@
 package com.example.eCommerce.controller;
 
-
 import com.example.eCommerce.dto.OrderDetailsDto;
 import com.example.eCommerce.dto.OrderDto;
 import com.example.eCommerce.securitySpring.security.services.UserDetailsImpl;
@@ -27,7 +26,7 @@ public class CartController {
     //trasform cart to order check out
     //addToCart
     // removeFromCart
-    // svuotare il carello
+    // svuotare il carrello
 
     private UUID getCurrentUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -36,35 +35,35 @@ public class CartController {
     }
 
     @GetMapping("/")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public ResponseEntity<OrderDto> getCart() {
         UUID customerId=getCurrentUserId();
         return ResponseEntity.ok(service.getCart(customerId));
     }
 
     @PostMapping("/new")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public ResponseEntity<OrderDto> createCart() {
         UUID customerId = getCurrentUserId();
         return ResponseEntity.status(HttpStatus.CREATED).body(service.createCart(customerId));
     }
 
     @PostMapping("/add")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public ResponseEntity<OrderDto> addToCart(@RequestBody OrderDetailsDto orderDetailsDto) {
         UUID customerId = getCurrentUserId();
         return ResponseEntity.ok(service.addToCart(customerId, orderDetailsDto));
     }
 
     @PostMapping("/remove")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public ResponseEntity<OrderDto> removeFromCart(@RequestBody OrderDetailsDto orderDetailsDto) {
         UUID customerId = getCurrentUserId();
         return ResponseEntity.ok(service.removeFromCart(customerId, orderDetailsDto));
     }
 
     @PostMapping("/clear")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public ResponseEntity<Void> clearCart() {
         UUID customerId = getCurrentUserId();
         service.clearCart(customerId);
@@ -72,7 +71,7 @@ public class CartController {
     }
 
     @PostMapping("/checkout")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public ResponseEntity<OrderDto> checkout(@RequestBody OrderDto cart) {
         cart.setCustomer_id(getCurrentUserId());
         return ResponseEntity.ok(service.checkout(cart));

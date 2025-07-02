@@ -61,7 +61,6 @@ public class ProductController {
 
     // Endpoint GET per recuperare un'immagine dal server
     @GetMapping("/images/{filename:.+}") // (il ".+" serve per catturare l'estensione)
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Resource> getImage(@PathVariable String filename) {
         try {
             // Costruisce il percorso completo del file unendo:
@@ -73,6 +72,9 @@ public class ProductController {
             // Carica la risorsa (immagine) come Resource (interfaccia Spring per risorse)
             Resource resource = new UrlResource(path.toUri());
 
+            if (!resource.exists() || !resource.isReadable()) {
+                throw new IOException("File non trovato");
+            }
             // Se tutto va bene, restituisce:
             // - Status HTTP 200 (OK)
             // - Header Content-Type appropriato (es. image/jpeg)

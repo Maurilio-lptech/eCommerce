@@ -32,11 +32,9 @@ public class OrderController {
 
     @PostMapping("admin/new")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<OrderDto> createOrder(@RequestBody @NotNull OrderDto EntityToCreate){
-        if(EntityToCreate.getId()!=null){
-            EntityToCreate.setId(null);
-        }
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.createOrder(EntityToCreate));
+    public ResponseEntity<OrderDto> createOrder(@RequestBody @NotNull OrderDto entityToCreate){
+        entityToCreate.setCustomer_id(getCurrentUserId()); //TODO
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.createOrder(entityToCreate));
     }
 
     @PutMapping("admin/update")

@@ -49,7 +49,7 @@ public class OrderServiceImplTest {
     @InjectMocks
     private OrderServiceImpl orderService;
 
-    //test se passo un dto valido per la creazione di un carello di un utente
+    //test se passo un dto valido per la creazione di un carrello di un utente
     @Test
     void CreateOrder_WithValidDto_ShouldCreateAndReturnOrder() {
 
@@ -59,7 +59,7 @@ public class OrderServiceImplTest {
 
         OrderDto inputDto = new OrderDto(); //creo un dto di input
         inputDto.setCustomer_id(customerId);
-        inputDto.setState("NEL_CARRELLO"); // stato nel carello
+        inputDto.setState("NEL_CARRELLO"); // stato nel carrello
         inputDto.setOrderDetailsList(Collections.emptyList());
 
         //mock del customer
@@ -101,7 +101,7 @@ public class OrderServiceImplTest {
 
     }
 
-    //con un customer che ha già un carello
+    //con un customer che ha già un carrello
     @Test
     void createOrder_WhenCustomerHasExistingCart_ShouldThrowException() {
         // Arrange
