@@ -21,7 +21,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
     private EntityManager entityManager;
 
 
-    public Page<Product> search(String name, String category, Double price, Pageable pageable, Boolean deleted) {
+    public Page<Product> search(String name, String category, Double price, Pageable pageable) {
 
         CriteriaBuilder cb = entityManager.getCriteriaBuilder(); // builder per i criteri
 
@@ -40,7 +40,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
 
         List<Predicate> predicates = new ArrayList<>();
 
-        predicates.add(cb.like(product.get("deleted"), "%" + false + "%"));
+        predicates.add(cb.equal(product.get("deleted"), false));
 
         if (name != null && !name.isEmpty()) {
             predicates.add(cb.like(product.get("name"), "%" + name + "%"));

@@ -9,5 +9,5 @@ import java.util.List;
 
 @Repository
 public interface ProductRepositoryCustom {
-   public Page<Product> search(String nome, String category, Double price, Pageable pageable, Boolean deleted);
+   public Page<Product> search(String nome, String category, Double price, Pageable pageable);
 }

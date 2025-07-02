@@ -150,7 +150,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Transactional(readOnly = true)
     public Page<ProductDto> searchProduct(String name, String category, Double price, Pageable pageable) {
-        return repository.search(name, category, price, pageable, false).map(mapper::toDto);
+        return repository.search(name, category, price, pageable).map(mapper::toDto);
     }
 
 }
