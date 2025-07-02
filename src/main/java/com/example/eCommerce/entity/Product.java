@@ -2,6 +2,7 @@ package com.example.eCommerce.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import lombok.Builder;
 import lombok.Data;
 import lombok.ToString;
 import org.hibernate.annotations.ColumnDefault;
@@ -46,12 +47,8 @@ public class Product {
     @OneToMany(mappedBy = "product")
     private List<OrderDetails> orderDetailsList;
 
-
-
-
-
-
-
+    @Column(columnDefinition = "BOOLEAN DEFAULT false")
+    private Boolean deleted;
 
 
 

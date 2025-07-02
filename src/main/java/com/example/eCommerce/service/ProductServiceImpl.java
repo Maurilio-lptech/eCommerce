@@ -43,14 +43,14 @@ public class ProductServiceImpl implements ProductService {
 
     @Transactional(readOnly = true)
     public ProductDto getProductById(UUID id) {
-        return mapper.toDto(repository.findById(id)
+        return mapper.toDto(repository.findByIdAndDeletedFalse(id)
                 .orElseThrow(() -> new EntityNotFoundException("Nessun product trovato con id" + id)));
     }
 
     @Transactional(readOnly = true)
     public Page<ProductDto> getAllProductByName(String name, Pageable pageable) {
 
-        Page<Product> productByName = repository.findByNameContains(name, pageable);
+        Page<Product> productByName = repository.findByNameContainsAndDeletedFalse(name, pageable);
 
         return productByName.map(mapper::toDto);
     }
@@ -143,14 +143,14 @@ public class ProductServiceImpl implements ProductService {
 
     @Transactional(readOnly = true)
     public Page<ProductDto> getAllProducts(Pageable pageable) {
-        Page<Product> productPage = repository.findAll(pageable);
+        Page<Product> productPage = repository.findByDeletedFalse(pageable);
 
         return productPage.map(mapper::toDto);
     }
 
     @Transactional(readOnly = true)
     public Page<ProductDto> searchProduct(String name, String category, Double price, Pageable pageable) {
-        return repository.search(name, category, price, pageable).map(mapper::toDto);
+        return repository.search(name, category, price, pageable, false).map(mapper::toDto);
     }
 
 }
